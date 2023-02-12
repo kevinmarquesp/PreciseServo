@@ -6,7 +6,7 @@ void PServo::_adjustDegValue(i8* deg)
     *deg = *deg > _maxDeg ? _maxDeg : *deg;
 }
 
-void PServo::config(i8 pin, i8 min, i8 max)
+void PServo::config(i8 pin, i8 min = 0, i8 max = 180)
 {
     this -> attach(pin);
     this -> write(min); // reset to the min value
