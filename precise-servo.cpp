@@ -16,10 +16,10 @@ void PServo::config(i8 pin, i8 min = 0, i8 max = 180)
 
 void PServo::preciseWrite(i8 deg, i16 sleep)
 {
+    _adjustDegValue(&deg);
+
     if (!sleep)
         return this -> write(deg);
-
-    _adjustDegValue(&deg);
 
     i8 curr = this -> read();
 
