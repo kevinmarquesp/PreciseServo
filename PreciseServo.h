@@ -7,7 +7,7 @@
 #define i8  uint8_t
 #define i16 uint16_t
 
-class PServo: public Servo
+class PreciseServo: public Servo
 {
   private:
     i8 _minDeg;

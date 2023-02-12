@@ -1,12 +1,12 @@
-#include "precise-servo.h"
+#include "PreciseServo.h"
 
-void PServo::_adjustDegValue(i8* deg)
+void PreciseServo::_adjustDegValue(i8* deg)
 {
     *deg = *deg < _minDeg ? _minDeg : *deg;
     *deg = *deg > _maxDeg ? _maxDeg : *deg;
 }
 
-void PServo::config(i8 pin, i8 min = 0, i8 max = 180)
+void PreciseServo::config(i8 pin, i8 min = 0, i8 max = 180)
 {
     this -> attach(pin);
     this -> write(min); // reset to the min value
@@ -14,7 +14,7 @@ void PServo::config(i8 pin, i8 min = 0, i8 max = 180)
     _maxDeg = max;
 }
 
-void PServo::preciseWrite(i8 deg, i16 sleep)
+void PreciseServo::preciseWrite(i8 deg, i16 sleep)
 {
     _adjustDegValue(&deg);
 
