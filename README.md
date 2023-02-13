@@ -4,14 +4,23 @@ and hobbyists to easily control the speed of servo components, without the need
 to manually create an `for` loop to handle that. Pull requests and sugestions
 are welcome! ❤️
 
-Features:
-+ Control the speed of each movement by setting a delay between each deggree.
+**Features:**
++ Control the speed of each movement by setting a delay between each degree.
 + Set a minimum and maximum value to not force so much the motor.
 
 > **&#9888; WARNING:** if you're in a bigger and complex project that involves handling
 multiple task at the same time (such as moving a robot and reading the user inputs
 from the keyboard, as an example) that library maybe break your code, because it
 uses the `delay()` function.
+
+
+## Download process
++ Go to the [releases page](https://github.com/kevinmarquesp/PreciseServo/releases)
+  and choose a version that you want to use.
++ Download the `PreciseServo.zip` file.
++ Extract it to your `Documents\Arduino\libraries\` directory.
+  + Or to your `~/Arduino/libraries/` if you are using a unix system.
++ Then import it to your project and have fun! ☺️
 
 
 ## How to use it?
