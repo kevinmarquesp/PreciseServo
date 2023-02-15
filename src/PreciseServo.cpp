@@ -25,9 +25,11 @@ void DServo::dwrite(i8 deg, i8 sleep)
 
     i8 curr = this->read();
 
-    // while curr != deg, it will approach the target position waiting the speed time each deggre
-    for (; curr != deg; deg > curr ? ++curr : --curr)
+    // while curr != deg, it will approach the target position waiting the sleep time each deggre
+    while (curr != deg)
     {
+        deg > curr ? ++curr : --curr; // ... iterator
+
         this->write(curr);
         delay(sleep);
     }
