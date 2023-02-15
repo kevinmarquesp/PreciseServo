@@ -16,16 +16,18 @@ void PreciseServo::config(i8 pin, i8 min = 0, i8 max = 180)
 
 void PreciseServo::preciseWrite(i8 deg, i16 sleep)
 {
-    _adjustDegValue(&deg);
+    deg = deg < this->min ? this->min : deg; // use the min value if it is lesser than that
+    deg = deg > this->max ? this->max : deg; // use the max value if it is greater than that
 
     if (!sleep)
         return this -> write(deg);
 
     i8 curr = this -> read();
 
-    for (; curr < deg || curr > deg; deg > curr ? ++curr : --curr)
+    // while curr != deg, it will approach the target position waiting the speed time each deggre
+    for (; curr != deg; deg > curr ? ++curr : --curr)
     {
-        this -> write(curr);
+        this->write(curr);
         delay(sleep);
     }
 }
