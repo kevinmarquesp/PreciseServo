@@ -1,11 +1,21 @@
 #include "PreciseServo.h"
 
-/** .........................
- * DServo METHOD DEFFINITIONS
+/** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
+bool _isOkToProceed(i8& min, i8& max, i8& deg, i8 sleep)
+{
+    deg = deg < min ? min : deg; // use the min value if it is lesser than that
+    deg = deg > max ? max : deg; // use the max value if it is greater than that
+
+    // it isn't different from a regular write() if the speed is 0
+    return sleep < 1;
+}
+
+/** .............................
+ * _BaseServo METHOD DEFFINITIONS
  */
 
 /** attach the object to the pin and set the min and max deggre values */
-void DServo::config(i8 pin, i8 min=0, i8 max=180)
+void _BaseServo::config(i8 pin, i8 min=0, i8 max=180)
 {
     this->attach(pin);
     this->write(min); // ... also, it resets to the min value on config
@@ -13,15 +23,15 @@ void DServo::config(i8 pin, i8 min=0, i8 max=180)
     this->max = max;
 }
 
-/** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
-void DServo::dwrite(i8 deg, i8 sleep)
-{
-    deg = deg < this->min ? this->min : deg; // use the min value if it is lesser than that
-    deg = deg > this->max ? this->max : deg; // use the max value if it is greater than that
+/** ...............................
+ * PreciseServo METHOD DEFFINITIONS
+ */
 
-    // it isn't different from a regular write() if the speed is 0
-    if (sleep < 1)
-        return this->write(deg);
+/** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
+void PreciseServo::move(i8 deg, i8 sleep)
+{
+    if (_isOkToProceed(this->min, this->max, deg, sleep))
+        return this->write(deg); 
 
     i8 curr = this->read();
 

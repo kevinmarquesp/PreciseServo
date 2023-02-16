@@ -4,16 +4,22 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-#define i8 uint8_t
+#define i8  uint8_t
+#define i64 uint64_t
 
-/** delayed servo - class to handle the servo speed with delay() function */
-class DServo: public Servo
+/** base attributes/methods that every servo class has in this library */
+class _BaseServo: public Servo
 {
   public:
-    i8 min;
-    i8 max; 
     void config(i8 pin, i8 min, i8 max);
-    void dwrite(i8 deg, i8 sleep);
+    i8 min, max; 
+};
+
+/** delayed servo - class to handle the servo speed with delay() function */
+class PreciseServo: public _BaseServo
+{
+  public:
+    void move(i8 deg, i8 sleep);
 };
 
 #endif
