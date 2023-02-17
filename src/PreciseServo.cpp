@@ -28,7 +28,7 @@ void _BaseServo::config(i8 pin, i8 min=0, i8 max=180)
  */
 
 /** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
-void PreciseServo::move(i8 deg, i8 sleep)
+void PreciseServo::move(i8 deg, i8 sleep=0)
 {
     if (_isOkToProceed(this->min, this->max, deg, sleep))
         return this->write(deg); 

@@ -11,7 +11,7 @@
 class _BaseServo: public Servo
 {
   public:
-    void config(i8 pin, i8 min, i8 max);
+    void config(i8 pin, i8 min=0, i8 max=180);
     i8 min, max; 
 };
 
@@ -19,7 +19,7 @@ class _BaseServo: public Servo
 class PreciseServo: public _BaseServo
 {
   public:
-    void move(i8 deg, i8 sleep);
+    void move(i8 deg, i8 sleep=0);
 };
 
 #endif
