@@ -9,6 +9,9 @@ BAUDRATE ?= 9600
 TESTS ?=     ./test
 RUN_TESTS ?= ./run-tests.py
 
+monitor:
+	@cu -l ${PORT} -s ${BAUDRATE}
+
 build:
 	@rm -rf ${DIST}
 	@mkdir ${DIST}
