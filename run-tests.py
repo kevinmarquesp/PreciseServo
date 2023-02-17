@@ -21,16 +21,16 @@ def controller(line):
         color = '\033[32m' if has_passed else '\033[31m'
         line_words = line.split(' ')
         line_words[1] = color + line_words[1] + '\033[m'
-        out = ' '.join(line_words) + '\033[m'
+        line = ' '.join(line_words) + '\033[m'
 
-    print(out)
+    print(line)
 
 
 def main():
     if None in [port, baudrate]:
         exit(1)
 
-    ser = serial.Serial(port='/dev/ttyUSB0', baudrate=9600)
+    ser = serial.Serial(port=port, baudrate=baudrate)
 
     while True:
         line = str(ser.readline(), 'utf-8').replace('\n', '').strip()
