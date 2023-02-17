@@ -41,6 +41,6 @@ void PreciseServo::move(i8 deg, i8 sleep=0)
         deg > curr ? ++curr : --curr; // ... iterator
 
         this->write(curr);
-        delay(sleep);
+        delay(curr == deg ? 0 : sleep); // the last sleep is irrelevant
     }
 }
