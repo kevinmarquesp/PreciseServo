@@ -14,7 +14,11 @@ from the keyboard, as an example) that library maybe break your code, because it
 uses the `delay()` function.
 
 
-## Download process
+## 📦 Dependencies
++ [`Servo`](https://github.com/arduino-libraries/Servo/) library.
+
+
+## ⬇️ Download process
 + Go to the [releases page](https://github.com/kevinmarquesp/PreciseServo/releases)
   and choose a version that you want to use.
 + Download the `PreciseServo.zip` file.
@@ -23,7 +27,7 @@ uses the `delay()` function.
 + Then import it to your project and have fun! ☺️
 
 
-## How to use it?
+### How to use it?
 Since that library extends the functions of the actual `Servo.h` library, every
 thing that you do with `Servo.h` can be done with `PreciseServo.h` at the same
 way, but with different names.
@@ -42,7 +46,7 @@ option to set the minimum and maximum values with the **`config()`** method:
 ```cpp
 void setup()
 {
-    my_servo.config(7, 20, 140);
+        my_servo.config(7, 20, 140);
 }
 ```
 > It will attach the `my_servo` object to the pin **7** on the board, and set
@@ -50,11 +54,11 @@ void setup()
 that even if you say it to be 180 degrees, it will stop at 140.
 
 Again, the `write()` function also works, but to control the speed of each
-movement you'll need to use the **`preciseWrite()`** function:
+movement you'll need to use the **`move()`** function:
 ```cpp
 void loop()
 {
-    my_servo.preciseWrite(140, 10);
+        my_servo.move(140, 10);
 }
 ```
 > It will make the motor move to the **140°** position, but it will wait 10
@@ -64,10 +68,10 @@ If it isn't clear enought, the code above is the same thing as:
 ```cpp
 void loop()
 {
-    for (int i = 20; i <= 140; i++)
-    {
-        my_servo.write(i);
-        delay(10);
-    }
+        for (int i = 20; i <= 140; i++)
+        {
+                my_servo.write(i);
+                delay(10);
+        }
 }
 ```
