@@ -1,6 +1,7 @@
 LIB_NAME ?= PreciseServo
 SRC ?=      src
 DIST ?=     dist
+EXAMPLES ?= examples
 
 BOARD ?=    arduino:avr:uno
 PORT ?=     /dev/ttyUSB0
@@ -16,6 +17,7 @@ build:
 	@rm -rf ${DIST}
 	@mkdir ${DIST}
 	@cp -r ${SRC} ${DIST}/${LIB_NAME}
+	@cp -r ${EXAMPLES} ${DIST}/${LIB_NAME}/${EXAMPLES}
 	@cd ${DIST}; zip -r ${LIB_NAME}.zip ${LIB_NAME}
 
 tests:
