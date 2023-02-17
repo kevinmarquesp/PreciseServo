@@ -2,9 +2,9 @@ test(minMax_defaultValues)
 {
     PreciseServo motor;
 
-    motor.config(10, 20, 90);
-    assertEqual(motor.min, 20);
-    assertEqual(motor.max, 90);
+    motor.config(10);
+    assertEqual(motor.min, 0);
+    assertEqual(motor.max, 180);
 }
 
 test(minMax_updated_config)

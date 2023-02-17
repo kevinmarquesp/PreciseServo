@@ -2,6 +2,7 @@
 #include <PreciseServo.h>
 
 #include "./class-PreciseServo_attribute-values.h"
+#include "./class-PreciseServo_move-method.h"
 
 void setup(void)
 {
