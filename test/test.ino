@@ -1,8 +1,20 @@
 #include <ArduinoUnit.h>
 #include <PreciseServo.h>
 
-#include "./class-PreciseServo_attribute-values.h"
-#include "./class-PreciseServo_move-method.h"
+void log64(i64 n)
+{
+    char buff[24];
+    utoa(n, buff, 10);
+    Serial.print(String(buff));
+}
+
+void log64ln(i64 n)
+{
+    log64(n);
+    Serial.print('\n');
+}
+
+#include "./class-PreciseServo.h"
 
 void setup(void)
 {
