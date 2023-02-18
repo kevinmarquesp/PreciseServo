@@ -44,3 +44,58 @@ void PreciseServo::move(i8 deg, i8 sleep=0)
         delay(curr == deg ? 0 : sleep); // the last sleep is irrelevant
     }
 }
+
+/** ................................
+ * AdvancedServo METHOD DEFFINITIONS
+ */
+
+/** AdvancedServo - constructor to set the boolean values to false by default */
+AdvancedServo::AdvancedServo(void)
+{
+    this->ready = false;
+    this->moving = false;
+    this->finished = false;
+}
+
+/** movement core - backbone of the movement validation */
+AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
+{
+    // validade the values and finisht if is ok to do that
+    if (_isOkToProceed(this->min, this->max, deg, sleep))
+    {
+        this->write(deg); 
+        _done();
+    }
+
+    // when it is ready to move but hasen't started yet
+    if (cond && this->ready && !this->finished)
+    {
+        _scheduler = millis();
+        this->moving = true;
+    }
+
+    // when already is moving, and every thing is ok, just update the position
+    if (cond && this->moving && !this->finished)
+        _update(deg);
+
+    return this;
+}
+
+/** shorthand to call the real move function, that has a condition to start */
+AdvancedServo* AdvancedServo::move(i8 deg, i8 sleep)
+{
+    this->move(true, deg, sleep);
+}
+
+/** instructions that mark this servo object as done */
+void AdvancedServo::_done(void)
+{
+    this->ready = false;
+    this->finished = true;
+    ++this->moveId;
+}
+
+/** update loop - it will count the milliseconds and write the deg based on that */
+void AdvancedServo::_update(i8 deg)
+{
+}
