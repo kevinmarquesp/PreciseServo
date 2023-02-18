@@ -58,5 +58,5 @@ test(class_PreciseServo__customSpeedDuration)
     motor.move(180, 10);
     result = millis() - timer;
 
-    assertTrue(result == timer + 10 * 180);
+    assertTrue(result == 10 * 180);
 }
