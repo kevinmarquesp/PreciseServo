@@ -10,7 +10,8 @@ bool _isOkToProceed(i8& min, i8& max, i8& deg, i8 sleep)
     return sleep < 1;
 }
 
-/** .............................
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * _BaseServo METHOD DEFFINITIONS
  */
 
@@ -23,9 +24,10 @@ void _BaseServo::config(i8 pin, i8 min=0, i8 max=180)
     this->max = max;
 }
 
-/** ...............................
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * PreciseServo METHOD DEFFINITIONS
- */
+ */ 
 
 /** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
 void PreciseServo::move(i8 deg, i8 sleep=0)
@@ -45,7 +47,8 @@ void PreciseServo::move(i8 deg, i8 sleep=0)
     }
 }
 
-/** ................................
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * AdvancedServo METHOD DEFFINITIONS
  */
 
