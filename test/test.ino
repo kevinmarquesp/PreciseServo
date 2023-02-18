@@ -1,6 +1,8 @@
 #include <ArduinoUnit.h>
 #include <PreciseServo.h>
 
+#define P1 7
+
 void log64(i64 n)
 {
     char buff[24];
@@ -15,6 +17,7 @@ void log64ln(i64 n)
 }
 
 #include "./class-PreciseServo.h"
+#include "./class-AdvancedServo.h"
 
 void setup(void)
 {
