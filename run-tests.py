@@ -23,6 +23,9 @@ def controller(line):
         line_words[1] = color + line_words[1] + '\033[m'
         line = ' '.join(line_words) + '\033[m'
 
+    else:
+        line = '\033[34m' + line + '\033[m'
+
     print(line)
 
 
@@ -31,6 +34,9 @@ def main():
         exit(1)
 
     ser = serial.Serial(port=port, baudrate=baudrate)
+
+    if ser is None:
+        exit(1)
 
     while True:
         line = str(ser.readline(), 'utf-8').replace('\n', '').strip()
