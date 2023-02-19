@@ -1,4 +1,36 @@
+// DEVELOPING TIP - (un)comment the line above to activate/deactvate the debbuger printer
+#define PRECISE_SERVO_DEBUG_FLAG
+
 #include "PreciseServo.h"
+
+#ifdef PRECISE_SERVO_DEBUG_FLAG
+    // list of commands to show a log line in the serial port
+    #define debug_log(flag,msg)   \
+        Serial.print(flag);       \
+        Serial.print(":");        \
+        Serial.print(__LINE__);   \
+        Serial.print(" :: ");     \
+        Serial.println(msg)
+
+    // list of commands to do the same thing, but to show a large number
+    #define debug_log64(flag,num) \
+        Serial.print(flag);       \
+        Serial.print(":");        \
+        Serial.print(__LINE__);   \
+        Serial.print(" :: ");     \
+        debug_print64(num)
+
+    /** HELPER FUNCTION - print a large number in the serial monitor */
+    void debug_print64(i64 num)
+    {
+        char buff[24];
+        utoa(num, buff, 10);
+        Serial.println(String(buff));
+    }
+#else
+    #define debug_log(flag, msg)
+    #define debug_log64(flag, msg)
+#endif
 
 /** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
 bool _isOkToProceed(i8& min, i8& max, i8& deg, i8 sleep)
@@ -44,6 +76,8 @@ void PreciseServo::move(i8 deg, i8 sleep=0)
 
         this->write(curr);
         delay(curr == deg ? 0 : sleep); // the last sleep is irrelevant
+
+        debug_log("PreciseServo-move/2", curr);
     }
 }
 
@@ -73,6 +107,8 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
     // when it is ready to move but hasen't started yet
     if (cond && this->ready && !this->finished)
     {
+        debug_log("AdvancedServo-move/3", "staring the movement process");
+
         _scheduler = millis();
         this->moving = true;
     }
@@ -93,6 +129,8 @@ AdvancedServo* AdvancedServo::move(i8 deg, i8 sleep)
 /** instructions that mark this servo object as done */
 void AdvancedServo::_done(void)
 {
+    debug_log("AdvancedServo-_done/0", "this servo is already in the target position");
+
     this->ready = false;
     this->finished = true;
     ++this->moveId;
