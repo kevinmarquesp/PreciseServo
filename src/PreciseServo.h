@@ -7,6 +7,33 @@
 #define i8  uint8_t
 #define i64 uint64_t
 
+// DEVELOPING TIP - (un)comment the line above to activate/deactvate the debbuger printer
+#define PRECISE_SERVO_DEBUG
+
+#ifdef PRECISE_SERVO_DEBUG
+// HELPER FUNCTION - print a large number in the serial monitor
+void debug_print64(i64 num);
+
+// list of commands to show a log line in the serial port
+#define debug_log(flag,msg)   \
+    Serial.print(flag);       \
+    Serial.print(":");        \
+    Serial.print(__LINE__);   \
+    Serial.print(" :: ");     \
+    Serial.println(msg)
+
+// list of commands to do the same thing, but to show a large number
+#define debug_log64(flag,num) \
+    Serial.print(flag);       \
+    Serial.print(":");        \
+    Serial.print(__LINE__);   \
+    Serial.print(" :: ");     \
+    debug_print64(num)
+#else
+#define debug_log(flag, msg)
+#define debug_log64(flag, msg)
+#endif
+
 /** base attributes/methods that every servo class has in this library */
 class _BaseServo: public Servo
 {

@@ -1,35 +1,13 @@
-// DEVELOPING TIP - (un)comment the line above to activate/deactvate the debbuger printer
-#define PRECISE_SERVO_DEBUG_FLAG
-
 #include "PreciseServo.h"
 
 #ifdef PRECISE_SERVO_DEBUG_FLAG
-    // list of commands to show a log line in the serial port
-    #define debug_log(flag,msg)   \
-        Serial.print(flag);       \
-        Serial.print(":");        \
-        Serial.print(__LINE__);   \
-        Serial.print(" :: ");     \
-        Serial.println(msg)
-
-    // list of commands to do the same thing, but to show a large number
-    #define debug_log64(flag,num) \
-        Serial.print(flag);       \
-        Serial.print(":");        \
-        Serial.print(__LINE__);   \
-        Serial.print(" :: ");     \
-        debug_print64(num)
-
-    /** HELPER FUNCTION - print a large number in the serial monitor */
-    void debug_print64(i64 num)
-    {
-        char buff[24];
-        utoa(num, buff, 10);
-        Serial.println(String(buff));
-    }
-#else
-    #define debug_log(flag, msg)
-    #define debug_log64(flag, msg)
+/** HELPER FUNCTION - print a large number in the serial monitor */
+void debug_print64(i64 num)
+{
+    char buff[24];
+    utoa(num, buff, 10);
+    Serial.println(String(buff));
+}
 #endif
 
 /** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
