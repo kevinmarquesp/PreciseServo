@@ -33,7 +33,7 @@
 #endif
 
 /** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
-bool _isOkToProceed(i8& min, i8& max, i8& deg, i8 sleep)
+bool local_isRedundant(i8& min, i8& max, i8& deg, i8 sleep)
 {
     deg = deg < min ? min : deg; // use the min value if it is lesser than that
     deg = deg > max ? max : deg; // use the max value if it is greater than that
@@ -64,7 +64,7 @@ void _BaseServo::config(i8 pin, i8 min=0, i8 max=180)
 /** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
 void PreciseServo::move(i8 deg, i8 sleep=0)
 {
-    if (_isOkToProceed(this->min, this->max, deg, sleep))
+    if (local_isRedundant(this->min, this->max, deg, sleep))
         return this->write(deg); 
 
     i8 curr = this->read();
@@ -98,7 +98,7 @@ AdvancedServo::AdvancedServo(void)
 AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
 {
     // validade the values and finisht if is ok to do that
-    if (_isOkToProceed(this->min, this->max, deg, sleep))
+    if (local_isRedundant(this->min, this->max, deg, sleep))
     {
         this->write(deg); 
         _done();
