@@ -54,14 +54,14 @@ class AdvancedServo: public _BaseServo
 {
   public:
     i8 moveId;
-    bool ready, moving, finished;
+    bool moving, finished;
     AdvancedServo(void);
     AdvancedServo* move(bool cond, i8 deg, i8 sleep);
     AdvancedServo* move(i8 deg, i8 sleep);
 
   private:
     i64 _scheduler;
-    void _update(i8 deg);
+    void _update(i8 deg, i8 sleep);
     void _done(void);
 };
 

@@ -67,7 +67,7 @@ void PreciseServo::move(i8 deg, i8 sleep=0)
 /** AdvancedServo - constructor to set the boolean values to false by default */
 AdvancedServo::AdvancedServo(void)
 {
-    this->ready = false;
+    this->moveId = 0;
     this->moving = false;
     this->finished = false;
 }
@@ -83,7 +83,7 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
     }
 
     // when it is ready to move but hasen't started yet
-    if (cond && this->ready && !this->finished)
+    if (cond && !this->moving && !this->finished)
     {
         debug_log("AdvancedServo-move/3", "staring the movement process");
 
@@ -91,9 +91,13 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
         this->moving = true;
     }
 
+    // there is no need to continue if the value is already setted, mark as done
+    if (deg == this->read())
+        _done();
+
     // when already is moving, and every thing is ok, just update the position
     if (cond && this->moving && !this->finished)
-        _update(deg);
+        _update(deg, sleep);
 
     return this;
 }
@@ -109,12 +113,16 @@ void AdvancedServo::_done(void)
 {
     debug_log("AdvancedServo-_done/0", "this servo is already in the target position");
 
-    this->ready = false;
     this->finished = true;
     ++this->moveId;
 }
 
 /** update loop - it will count the milliseconds and write the deg based on that */
-void AdvancedServo::_update(i8 deg)
+void AdvancedServo::_update(i8 deg, i8 sleep)
 {
+    debug_log("AdvancedServo-_update/2", this->read());
+
+    // count the millis() to check if it is able to make a single movement
+    if (millis() - _scheduler >= sleep)
+        this->write(this->read() + 1);
 }
