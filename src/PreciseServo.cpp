@@ -75,6 +75,10 @@ AdvancedServo::AdvancedServo(void)
 /** movement core - backbone of the movement validation */
 AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
 {
+    // ...
+    if (!cond)
+        return this;
+
     // validade the values and finisht if is ok to do that
     if (local_isRedundant(this->min, this->max, deg, sleep))
     {
@@ -83,7 +87,7 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
     }
 
     // when it is ready to move but hasen't started yet
-    if (cond && !this->moving && !this->finished)
+    if (!this->moving && !this->finished)
     {
         debug_log("AdvancedServo-move/3", "staring the movement process");
 
@@ -96,7 +100,7 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
         _done();
 
     // when already is moving, and every thing is ok, just update the position
-    if (cond && this->moving && !this->finished)
+    else if (this->moving && !this->finished)
         _update(deg, sleep);
 
     return this;
@@ -105,7 +109,7 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
 /** shorthand to call the real move function, that has a condition to start */
 AdvancedServo* AdvancedServo::move(i8 deg, i8 sleep)
 {
-    this->move(true, deg, sleep);
+    return this->move(this->is(0), deg, sleep);
 }
 
 /** instructions that mark this servo object as done */
@@ -124,5 +128,18 @@ void AdvancedServo::_update(i8 deg, i8 sleep)
 
     // count the millis() to check if it is able to make a single movement
     if (millis() - _scheduler >= sleep)
-        this->write(this->read() + 1);
+    {
+        i8 curr = this->read();
+
+        if (deg > curr)
+            this->write(this->read() + 1);
+        else
+            this->write(this->read() - 1);
+    }
+}
+
+/** user id validation - check if the current motor is the expected id by the user */
+bool AdvancedServo::is(i8 id)
+{
+    return id == this->moveId;
 }
