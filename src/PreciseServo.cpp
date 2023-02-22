@@ -1,15 +1,5 @@
 #include "PreciseServo.h"
 
-#ifdef PRECISE_SERVO_DEBUG_FLAG
-/** HELPER FUNCTION - print a large number in the serial monitor */
-void debug_print64(u64 num)
-{
-    char buff[24];
-    utoa(num, buff, 10);
-    Serial.println(String(buff));
-}
-#endif
-
 /** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
 bool local_isRedundant(u8& min, u8& max, u8& deg, u8 sleep)
 {
@@ -54,8 +44,6 @@ void PreciseServo::move(u8 deg, u8 sleep=0)
 
         this->write(curr);
         delay(curr == deg ? 0 : sleep); // the last sleep is irrelevant
-
-        debug_log("PreciseServo-move/2", curr);
     }
 }
 
@@ -76,8 +64,6 @@ AdvancedServo::AdvancedServo(void)
 /** [private] update loop - it will count the milliseconds and write the deg based on that */
 void AdvancedServo::_update(u8 deg, u8 sleep)
 {
-    debug_log("AdvancedServo-_update/2", this->read());
-
     // count the millis() to check if it is able to make a single movement
     if (millis() - _scheduler >= sleep)
     {
@@ -94,8 +80,6 @@ void AdvancedServo::_update(u8 deg, u8 sleep)
 /** [private] instructions that mark this servo object as done */
 void AdvancedServo::_markAsDone(void)
 {
-    debug_log("AdvancedServo-_done/0", "this servo is already in the target position");
-
     _isDone = true;
     _isMoving = false;
     ++_movementId;
@@ -112,17 +96,11 @@ AdvancedServo* AdvancedServo::move(bool cond, u8 deg, u8 sleep)
 
     // there is no need to continue if the value is already setted, mark as done
     if (deg == this->read())
-    {
-        debug_log("AdvancedServo-move/3", "the deg value is the current position");
-
         _markAsDone();
-    }
 
     // validade the values and finish the movement if it is ok to do that
     if (local_isRedundant(this->min, this->max, deg, sleep))
     {
-        debug_log("AdvancedServo-move/3", "the sleep delay was not defined");
-
         this->write(deg); 
         _markAsDone();
     }
@@ -130,8 +108,6 @@ AdvancedServo* AdvancedServo::move(bool cond, u8 deg, u8 sleep)
     // when it is ready to move but hasen't started yet, start the shceduler thing
     if (!_isMoving && !_isDone)
     {
-        debug_log("AdvancedServo-move/3", "staring the movement process");
-
         _scheduler = millis();
         _isMoving = true;
     }
