@@ -1,4 +1,4 @@
-test(class_AdvancedServo__method__movingValues)
+test (class_AdvancedServo__method__movingValues)
 {
     AdvancedServo motor;
 
@@ -11,7 +11,7 @@ test(class_AdvancedServo__method__movingValues)
     assertFalse(motor.done);
 }
 
-test(class_AdvancedServo__method__moveUntilDone)
+test (class_AdvancedServo__method__moveUntilDone)
 {
     AdvancedServo motor;
     motor.config(P1, 0, 180);
@@ -32,7 +32,7 @@ test(class_AdvancedServo__method__moveUntilDone)
     assertEqual(motor.moveId, 1);
 }
 
-test(class_AdvancedServo__method__moveUntilDoneBackwards)
+test (class_AdvancedServo__method__moveUntilDoneBackwards)
 {
     AdvancedServo motor;
     motor.config(P1, 0, 180);
@@ -54,7 +54,7 @@ test(class_AdvancedServo__method__moveUntilDoneBackwards)
     assertEqual(motor.moveId, 1);
 }
 
-test(class_AdvancedServo__method__moreMovements)
+test (class_AdvancedServo__method__moreMovements)
 {
     AdvancedServo motor;
 

@@ -1,28 +1,28 @@
-test(class_PreciseServo__defaultConfigValues)
+test (class_PreciseServo__defaultConfigValues)
 {
     PreciseServo motor;
 
-    motor.config(10);
+    motor.config(P1);
     assertEqual(motor.min, 0);
     assertEqual(motor.max, 180);
 }
 
-test(class_PreciseServo__updatingServoConfig)
+test (class_PreciseServo__updatingServoConfig)
 {
     PreciseServo motor;
 
-    motor.config(10, 20, 90);
-    motor.config(7, 0, 180);
+    motor.config(P1, 20, 90);
+    motor.config(P2, 0, 180);
 
     assertEqual(motor.min, 0);
     assertEqual(motor.max, 180);
 }
 
-test(class_PreciseServo__changeMinMaxValues)
+test (class_PreciseServo__changeMinMaxValues)
 {
     PreciseServo motor;
 
-    motor.config(5, 20, 90);
+    motor.config(P1, 20, 90);
 
     motor.min = 0;
     motor.max = 180;
@@ -31,13 +31,13 @@ test(class_PreciseServo__changeMinMaxValues)
     assertEqual(motor.max, 180);
 }
 
-test(class_PreciseServo__defaultSpeedValue)
+test (class_PreciseServo__defaultSpeedValue)
 {
     PreciseServo motor;
     i64 timer;
     i64 result;
 
-    motor.config(5, 0, 180);
+    motor.config(P1, 0, 180);
 
     timer = millis();
     motor.move(180);
@@ -46,13 +46,13 @@ test(class_PreciseServo__defaultSpeedValue)
     assertTrue(result <= 1);
 }
 
-test(class_PreciseServo__customSpeedDuration)
+test (class_PreciseServo__customSpeedDuration)
 {
     PreciseServo motor;
     i64 timer;
     i64 result;
 
-    motor.config(5, 0, 180);
+    motor.config(P1, 0, 180);
 
     timer = millis();
     motor.move(180, 10);

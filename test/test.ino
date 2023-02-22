@@ -1,7 +1,9 @@
 #include <ArduinoUnit.h>
 #include <PreciseServo.h>
 
-#define P1 7
+#define P1 5
+#define P2 6
+#define P3 7
 
 void log64(i64 n)
 {
@@ -26,7 +28,7 @@ void setup(void)
     Test::exclude("skip_*");
 
     #ifdef PRECISE_SERVO_DEBUG
-    Test::exclude("class_PreciseServo__defaultSpeedValue");
+        Test::exclude("class_PreciseServo__defaultSpeedValue");
     #endif
 }
 
