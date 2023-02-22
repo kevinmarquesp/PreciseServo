@@ -84,11 +84,17 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
 
     // there is no need to continue if the value is already setted, mark as done
     if (deg == this->read())
+    {
+        debug_log("AdvancedServo-move/3", "the deg value is the current position");
+
         _markAsDone();
+    }
 
     // validade the values and finish the movement if it is ok to do that
     if (local_isRedundant(this->min, this->max, deg, sleep))
     {
+        debug_log("AdvancedServo-move/3", "the sleep delay was not defined");
+
         this->write(deg); 
         _markAsDone();
     }
@@ -134,6 +140,7 @@ void AdvancedServo::_update(i8 deg, i8 sleep)
     if (millis() - _scheduler >= sleep)
     {
         i8 curr = this->read();
+        _scheduler = millis();
 
         if (deg > curr)
             this->write(this->read() + 1);
