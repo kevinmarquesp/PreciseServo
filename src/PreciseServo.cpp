@@ -68,26 +68,33 @@ void PreciseServo::move(i8 deg, i8 sleep=0)
 AdvancedServo::AdvancedServo(void)
 {
     this->moveId = 0;
+    this->locked = false;
     this->moving = false;
-    this->finished = false;
+    this->done = false;
 }
 
 /** movement core - backbone of the movement validation */
 AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
 {
-    // ...
-    if (!cond)
+    // if the user condition isn't true, stop, otherwise, start a new movement
+    if (!cond || this->locked)
         return this;
+    else
+        this->done = false;
 
-    // validade the values and finisht if is ok to do that
+    // there is no need to continue if the value is already setted, mark as done
+    if (deg == this->read())
+        _markAsDone();
+
+    // validade the values and finish the movement if it is ok to do that
     if (local_isRedundant(this->min, this->max, deg, sleep))
     {
         this->write(deg); 
-        _done();
+        _markAsDone();
     }
 
-    // when it is ready to move but hasen't started yet
-    if (!this->moving && !this->finished)
+    // when it is ready to move but hasen't started yet, start the shceduler thing
+    if (!this->moving && !this->done)
     {
         debug_log("AdvancedServo-move/3", "staring the movement process");
 
@@ -95,12 +102,8 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
         this->moving = true;
     }
 
-    // there is no need to continue if the value is already setted, mark as done
-    if (deg == this->read())
-        _done();
-
     // when already is moving, and every thing is ok, just update the position
-    else if (this->moving && !this->finished)
+    else if (this->moving && !this->done)
         _update(deg, sleep);
 
     return this;
@@ -113,11 +116,12 @@ AdvancedServo* AdvancedServo::move(i8 deg, i8 sleep)
 }
 
 /** instructions that mark this servo object as done */
-void AdvancedServo::_done(void)
+void AdvancedServo::_markAsDone(void)
 {
     debug_log("AdvancedServo-_done/0", "this servo is already in the target position");
 
-    this->finished = true;
+    this->done = true;
+    this->moving = false;
     ++this->moveId;
 }
 

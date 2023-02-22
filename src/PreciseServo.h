@@ -54,7 +54,7 @@ class AdvancedServo: public _BaseServo
 {
   public:
     i8 moveId;
-    bool moving, finished;
+    bool locked, moving, done;
     AdvancedServo(void);
     bool is(i8 id);
     AdvancedServo* move(bool cond, i8 deg, i8 sleep);
@@ -63,7 +63,7 @@ class AdvancedServo: public _BaseServo
   private:
     i64 _scheduler;
     void _update(i8 deg, i8 sleep);
-    void _done(void);
+    void _markAsDone(void);
 };
 
 #endif
