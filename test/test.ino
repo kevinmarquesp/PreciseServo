@@ -23,6 +23,7 @@ void setup(void)
 {
     Serial.begin(9600);
     while (!Serial) {}; // portability for leonardo/micro
+    Test::exclude("skip_*");
 
     #ifdef PRECISE_SERVO_DEBUG
     Test::exclude("class_PreciseServo__defaultSpeedValue");
