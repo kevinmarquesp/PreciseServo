@@ -5,14 +5,14 @@
 #define P2 6
 #define P3 7
 
-void log64(i64 n)
+void log64(u64 n)
 {
     char buff[24];
     utoa(n, buff, 10);
     Serial.print(String(buff));
 }
 
-void log64ln(i64 n)
+void log64ln(u64 n)
 {
     log64(n);
     Serial.print('\n');

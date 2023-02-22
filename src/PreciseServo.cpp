@@ -2,7 +2,7 @@
 
 #ifdef PRECISE_SERVO_DEBUG_FLAG
 /** HELPER FUNCTION - print a large number in the serial monitor */
-void debug_print64(i64 num)
+void debug_print64(u64 num)
 {
     char buff[24];
     utoa(num, buff, 10);
@@ -11,7 +11,7 @@ void debug_print64(i64 num)
 #endif
 
 /** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
-bool local_isRedundant(i8& min, i8& max, i8& deg, i8 sleep)
+bool local_isRedundant(u8& min, u8& max, u8& deg, u8 sleep)
 {
     deg = deg < min ? min : deg; // use the min value if it is lesser than that
     deg = deg > max ? max : deg; // use the max value if it is greater than that
@@ -26,7 +26,7 @@ bool local_isRedundant(i8& min, i8& max, i8& deg, i8 sleep)
  */
 
 /** attach the object to the pin and set the min and max deggre values */
-void _BaseServo::config(i8 pin, i8 min=0, i8 max=180)
+void _BaseServo::config(u8 pin, u8 min=0, u8 max=180)
 {
     this->attach(pin);
     this->write(min); // ... also, it resets to the min value on config
@@ -40,12 +40,12 @@ void _BaseServo::config(i8 pin, i8 min=0, i8 max=180)
  */ 
 
 /** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
-void PreciseServo::move(i8 deg, i8 sleep=0)
+void PreciseServo::move(u8 deg, u8 sleep=0)
 {
     if (local_isRedundant(this->min, this->max, deg, sleep))
         return this->write(deg); 
 
-    i8 curr = this->read();
+    u8 curr = this->read();
 
     // while curr != deg, it will approach the target position waiting the sleep time each deggre
     while (curr != deg)
@@ -74,7 +74,7 @@ AdvancedServo::AdvancedServo(void)
 }
 
 /** movement core - backbone of the movement validation */
-AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
+AdvancedServo* AdvancedServo::move(bool cond, u8 deg, u8 sleep)
 {
     // if the user condition isn't true, stop, otherwise, start a new movement
     if (!cond || this->locked)
@@ -116,7 +116,7 @@ AdvancedServo* AdvancedServo::move(bool cond, i8 deg, i8 sleep)
 }
 
 /** shorthand to call the real move function, that has a condition to start */
-AdvancedServo* AdvancedServo::move(i8 deg, i8 sleep)
+AdvancedServo* AdvancedServo::move(u8 deg, u8 sleep)
 {
     return this->move(this->is(0), deg, sleep);
 }
@@ -132,14 +132,14 @@ void AdvancedServo::_markAsDone(void)
 }
 
 /** update loop - it will count the milliseconds and write the deg based on that */
-void AdvancedServo::_update(i8 deg, i8 sleep)
+void AdvancedServo::_update(u8 deg, u8 sleep)
 {
     debug_log("AdvancedServo-_update/2", this->read());
 
     // count the millis() to check if it is able to make a single movement
     if (millis() - _scheduler >= sleep)
     {
-        i8 curr = this->read();
+        u8 curr = this->read();
         _scheduler = millis();
 
         if (deg > curr)
@@ -150,7 +150,7 @@ void AdvancedServo::_update(i8 deg, i8 sleep)
 }
 
 /** user id validation - check if the current motor is the expected id by the user */
-bool AdvancedServo::is(i8 id)
+bool AdvancedServo::is(u8 id)
 {
     return id == this->moveId;
 }
@@ -162,7 +162,7 @@ bool AdvancedServo::isDone(void)
 }
 
 /** getter (aternative) - get the done value if the motor is in a specific movement */
-bool AdvancedServo::isDone(i8 id=0)
+bool AdvancedServo::isDone(u8 id=0)
 {
     return id == this->moveId && this->done;
 }
@@ -186,26 +186,26 @@ void AdvancedServo::whenDone(void fn(void))
  */
 
 /** check if an array of servos is all marked as completed */
-bool ArrayHelpers::isAllDone(AdvancedServo* servos, i8 size)
+bool ArrayHelpers::isAllDone(AdvancedServo* servos, u8 size)
 {
-    for (i8 i = 0; i < size; ++i)
+    for (u8 i = 0; i < size; ++i)
         if (!servos[i].done)
             return false;
     return true;
 }
 
 /** check if all servos has the same movement ID */
-bool ArrayHelpers::isAll(AdvancedServo* servos, i8 size, i8 id)
+bool ArrayHelpers::isAll(AdvancedServo* servos, u8 size, u8 id)
 {
-    for (i8 i = 0; i < size; ++i)
+    for (u8 i = 0; i < size; ++i)
         if (servos[i].moveId != id)
             return false;
     return true;
 }
 
 /** reset an array of multiple servos to their default values */
-void ArrayHelpers::resetAll(AdvancedServo* servos, i8 size)
+void ArrayHelpers::resetAll(AdvancedServo* servos, u8 size)
 {
-    for (i8 i = 0; i < size; ++i)
+    for (u8 i = 0; i < size; ++i)
         servos[i].reset();
 }

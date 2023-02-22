@@ -58,7 +58,7 @@ test (class_AdvancedServo__method__moreMovements)
 {
     AdvancedServo motor;
 
-    const i8 SPEED = 5;
+    const u8 SPEED = 5;
     motor.config(P1, 0, 180);
 
     assertFalse(motor.moving);

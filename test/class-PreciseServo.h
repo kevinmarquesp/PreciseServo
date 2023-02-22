@@ -34,8 +34,8 @@ test (class_PreciseServo__changeMinMaxValues)
 test (class_PreciseServo__defaultSpeedValue)
 {
     PreciseServo motor;
-    i64 timer;
-    i64 result;
+    u64 timer;
+    u64 result;
 
     motor.config(P1, 0, 180);
 
@@ -49,8 +49,8 @@ test (class_PreciseServo__defaultSpeedValue)
 test (class_PreciseServo__customSpeedDuration)
 {
     PreciseServo motor;
-    i64 timer;
-    i64 result;
+    u64 timer;
+    u64 result;
 
     motor.config(P1, 0, 180);
 
