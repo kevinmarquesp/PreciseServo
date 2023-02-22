@@ -3,13 +3,12 @@ test(class_AdvancedServo__method__movingValues)
     AdvancedServo motor;
 
     motor.config(P1, 0, 180);
-    // motor.ready = true;
+    motor.write(0);
 
-    // assertTrue(motor.ready);
     motor.move(180, 10);
 
     assertTrue(motor.moving);
-    assertFalse(motor.finished);
+    assertFalse(motor.done);
 }
 
 test(class_AdvancedServo__method__moveUntilDone)
@@ -19,14 +18,16 @@ test(class_AdvancedServo__method__moveUntilDone)
 
     assertFalse(motor.moving);
 
-    while (!motor.finished)
+    while (!motor.done)
     {
-        assertFalse(motor.finished);
+        assertFalse(motor.done);
         motor.move(180, 10);
-        assertTrue(motor.moving);
+
+        if (motor.done) assertFalse(motor.moving);
+        else assertTrue(motor.moving);
     }
 
-    assertTrue(motor.finished);
+    assertTrue(motor.done);
     assertEqual(motor.read(), 180);
     assertEqual(motor.moveId, 1);
 }
