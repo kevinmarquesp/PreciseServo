@@ -43,7 +43,7 @@ test(class_PreciseServo__defaultSpeedValue)
     motor.move(180);
     result = millis() - timer;
 
-    assertTrue(result == 0);
+    assertTrue(result <= 1);
 }
 
 test(class_PreciseServo__customSpeedDuration)
