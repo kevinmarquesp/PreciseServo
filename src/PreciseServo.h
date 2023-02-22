@@ -70,7 +70,7 @@ class AdvancedServo: public _BaseServo
     void _markAsDone(void);
 };
 
-/** ... */
+/** helper functions to work with multiple servos in a single array */
 namespace ArrayHelpers
 {
     bool isAllDone(AdvancedServo* servos, i8 size);
