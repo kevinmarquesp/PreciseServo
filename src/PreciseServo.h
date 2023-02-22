@@ -53,19 +53,27 @@ class PreciseServo: public _BaseServo
 class AdvancedServo: public _BaseServo
 {
   public:
-    u8 moveId;
-    bool locked, moving, done;
     AdvancedServo(void);
+
+    AdvancedServo* move(bool cond, u8 deg, u8 sleep);
+    AdvancedServo* move(u8 deg, u8 sleep);
+
     bool is(u8 id);
     bool isDone(void);
     bool isDone(u8 id);
-    AdvancedServo* move(bool cond, u8 deg, u8 sleep);
-    AdvancedServo* move(u8 deg, u8 sleep);
+
+    void lock(void);
+    void unlock(void);
     void reset(void);
     void whenDone(void fn(void));
 
   private:
-    u64 _scheduler;
+    bool _isLocked;
+    bool _isMoving;
+    bool _isDone;
+    u8   _movementId;
+    u64  _scheduler;
+
     void _update(u8 deg, u8 sleep);
     void _markAsDone(void);
 };

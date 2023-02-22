@@ -67,20 +67,48 @@ void PreciseServo::move(u8 deg, u8 sleep=0)
 /** AdvancedServo - constructor to set the boolean values to false by default */
 AdvancedServo::AdvancedServo(void)
 {
-    this->moveId = 0;
-    this->locked = false;
-    this->moving = false;
-    this->done = false;
+    _movementId = 0;
+    _isLocked = false;
+    _isMoving = false;
+    _isDone = false;
+}
+
+/** [private] update loop - it will count the milliseconds and write the deg based on that */
+void AdvancedServo::_update(u8 deg, u8 sleep)
+{
+    debug_log("AdvancedServo-_update/2", this->read());
+
+    // count the millis() to check if it is able to make a single movement
+    if (millis() - _scheduler >= sleep)
+    {
+        u8 curr = this->read();
+        _scheduler = millis();
+
+        if (deg > curr)
+            this->write(this->read() + 1);
+        else
+            this->write(this->read() - 1);
+    }
+}
+
+/** [private] instructions that mark this servo object as done */
+void AdvancedServo::_markAsDone(void)
+{
+    debug_log("AdvancedServo-_done/0", "this servo is already in the target position");
+
+    _isDone = true;
+    _isMoving = false;
+    ++_movementId;
 }
 
 /** movement core - backbone of the movement validation */
 AdvancedServo* AdvancedServo::move(bool cond, u8 deg, u8 sleep)
 {
     // if the user condition isn't true, stop, otherwise, start a new movement
-    if (!cond || this->locked)
+    if (!cond || _isLocked)
         return this;
     else
-        this->done = false;
+        _isDone = false;
 
     // there is no need to continue if the value is already setted, mark as done
     if (deg == this->read())
@@ -100,85 +128,69 @@ AdvancedServo* AdvancedServo::move(bool cond, u8 deg, u8 sleep)
     }
 
     // when it is ready to move but hasen't started yet, start the shceduler thing
-    if (!this->moving && !this->done)
+    if (!_isMoving && !_isDone)
     {
         debug_log("AdvancedServo-move/3", "staring the movement process");
 
         _scheduler = millis();
-        this->moving = true;
+        _isMoving = true;
     }
 
     // when already is moving, and every thing is ok, just update the position
-    else if (this->moving && !this->done)
+    else if (_isMoving && !_isDone)
         _update(deg, sleep);
 
     return this;
 }
 
+/** instructions to reset the values of an AdvancedServo object instance */
+void AdvancedServo::reset(void)
+{
+    _movementId = 0;
+    _isMoving = false;
+    _isDone = false;
+}
+
 /** shorthand to call the real move function, that has a condition to start */
 AdvancedServo* AdvancedServo::move(u8 deg, u8 sleep)
 {
-    return this->move(this->is(0), deg, sleep);
-}
-
-/** instructions that mark this servo object as done */
-void AdvancedServo::_markAsDone(void)
-{
-    debug_log("AdvancedServo-_done/0", "this servo is already in the target position");
-
-    this->done = true;
-    this->moving = false;
-    ++this->moveId;
-}
-
-/** update loop - it will count the milliseconds and write the deg based on that */
-void AdvancedServo::_update(u8 deg, u8 sleep)
-{
-    debug_log("AdvancedServo-_update/2", this->read());
-
-    // count the millis() to check if it is able to make a single movement
-    if (millis() - _scheduler >= sleep)
-    {
-        u8 curr = this->read();
-        _scheduler = millis();
-
-        if (deg > curr)
-            this->write(this->read() + 1);
-        else
-            this->write(this->read() - 1);
-    }
+    return this->move(_movementId == 0, deg, sleep);
 }
 
 /** user id validation - check if the current motor is the expected id by the user */
 bool AdvancedServo::is(u8 id)
 {
-    return id == this->moveId;
+    return id == _movementId;
 }
 
 /** getter - get the done value of this object instance */
 bool AdvancedServo::isDone(void)
 {
-    return this->done;
+    return _isDone;
 }
 
 /** getter (aternative) - get the done value if the motor is in a specific movement */
-bool AdvancedServo::isDone(u8 id=0)
+bool AdvancedServo::isDone(u8 id)
 {
-    return id == this->moveId && this->done;
-}
-
-/** instructions to reset the values of an AdvancedServo object instance */
-void AdvancedServo::reset(void)
-{
-    this->moveId = 0;
-    this->moving = false;
-    this->done = false;
+    return _isDone && id == _movementId;
 }
 
 /** just a syntaxe helper to run anonymous functions when the movement is completed */
 void AdvancedServo::whenDone(void fn(void))
 {
-    if (this->done) fn();
+    if (_isDone) fn();
+}
+
+/** lock the servo motor to interrupt any movement update */
+void AdvancedServo::lock(void)
+{
+    _isLocked = true;
+}
+
+/** unlock the motor to continue to update the movement values */
+void AdvancedServo::unlock(void)
+{
+    _isLocked = false;
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -189,7 +201,7 @@ void AdvancedServo::whenDone(void fn(void))
 bool ArrayHelpers::isAllDone(AdvancedServo* servos, u8 size)
 {
     for (u8 i = 0; i < size; ++i)
-        if (!servos[i].done)
+        if (!servos[i].isDone())
             return false;
     return true;
 }
@@ -198,7 +210,7 @@ bool ArrayHelpers::isAllDone(AdvancedServo* servos, u8 size)
 bool ArrayHelpers::isAll(AdvancedServo* servos, u8 size, u8 id)
 {
     for (u8 i = 0; i < size; ++i)
-        if (servos[i].moveId != id)
+        if (servos[i].is(id))
             return false;
     return true;
 }
