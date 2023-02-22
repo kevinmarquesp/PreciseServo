@@ -8,7 +8,7 @@
 #define i64 uint64_t
 
 // DEVELOPING TIP - (un)comment the line above to activate/deactvate the debbuger printer
-#define PRECISE_SERVO_DEBUG
+// #define PRECISE_SERVO_DEBUG
 
 #ifdef PRECISE_SERVO_DEBUG
 // HELPER FUNCTION - print a large number in the serial monitor
@@ -57,13 +57,25 @@ class AdvancedServo: public _BaseServo
     bool locked, moving, done;
     AdvancedServo(void);
     bool is(i8 id);
+    bool isDone(void);
+    bool isDone(i8 id);
     AdvancedServo* move(bool cond, i8 deg, i8 sleep);
     AdvancedServo* move(i8 deg, i8 sleep);
+    void reset(void);
+    void whenDone(void fn(void));
 
   private:
     i64 _scheduler;
     void _update(i8 deg, i8 sleep);
     void _markAsDone(void);
 };
+
+/** ... */
+namespace ArrayHelpers
+{
+    bool isAllDone(AdvancedServo* servos, i8 size);
+    bool isAll(AdvancedServo* servos, i8 size, i8 id);
+    void resetAll(AdvancedServo* servos, i8 size);
+}
 
 #endif

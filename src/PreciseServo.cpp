@@ -154,3 +154,58 @@ bool AdvancedServo::is(i8 id)
 {
     return id == this->moveId;
 }
+
+/** getter - get the done value of this object instance */
+bool AdvancedServo::isDone(void)
+{
+    return this->done;
+}
+
+/** getter (aternative) - get the done value if the motor is in a specific movement */
+bool AdvancedServo::isDone(i8 id=0)
+{
+    return id == this->moveId && this->done;
+}
+
+/** instructions to reset the values of an AdvancedServo object instance */
+void AdvancedServo::reset(void)
+{
+    this->moveId = 0;
+    this->moving = false;
+    this->done = false;
+}
+
+/** just a syntaxe helper to run anonymous functions when the movement is completed */
+void AdvancedServo::whenDone(void fn(void))
+{
+    if (this->done) fn();
+}
+
+/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * ArrayHeler NAMESPACE FUNCTIONS
+ */
+
+/** check if an array of servos is all marked as completed */
+bool ArrayHelpers::isAllDone(AdvancedServo* servos, i8 size)
+{
+    for (i8 i = 0; i < size; ++i)
+        if (!servos[i].done)
+            return false;
+    return true;
+}
+
+/** check if all servos has the same movement ID */
+bool ArrayHelpers::isAll(AdvancedServo* servos, i8 size, i8 id)
+{
+    for (i8 i = 0; i < size; ++i)
+        if (servos[i].moveId != id)
+            return false;
+    return true;
+}
+
+/** reset an array of multiple servos to their default values */
+void ArrayHelpers::resetAll(AdvancedServo* servos, i8 size)
+{
+    for (i8 i = 0; i < size; ++i)
+        servos[i].reset();
+}
