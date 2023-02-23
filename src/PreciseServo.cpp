@@ -1,16 +1,5 @@
 #include "PreciseServo.h"
 
-/** HELPER FUNCTION - ajust the deg value and tells if the sleep is needed to be considered */
-bool local_isRedundant(u8& min, u8& max, u8& deg, u8 sleep)
-{
-    deg = deg < min ? min : deg; // use the min value if it is lesser than that
-    deg = deg > max ? max : deg; // use the max value if it is greater than that
-
-    // it isn't different from a regular write() if the speed is 0
-    return sleep < 1;
-}
-
-
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * _BaseServo METHOD DEFFINITIONS
  */
@@ -20,8 +9,35 @@ void _BaseServo::config(u8 pin, u8 min=0, u8 max=180)
 {
     this->attach(pin);
     this->write(min); // ... also, it resets to the min value on config
-    this->min = min;
-    this->max = max;
+    _min = min;
+    _max = max;
+}
+
+/** getter method - get the this->_min <u8> value */
+u8 _BaseServo::getMin(void)
+{
+    return _min;
+}
+
+/** getter method - get the this->_max <u8> value */
+u8 _BaseServo::getMax(void)
+{
+    return _max;
+}
+
+/** adjust the deg value to correspond to a value between the min and max value */
+void _BaseServo::_adjustDegValues(u8& deg)
+{
+    deg = deg < _min ? _min : deg; // use the min value if it is lesser than that
+    deg = deg > _max ? _max : deg; // use the max value if it is greater than that
+}
+
+/** write the position when the sleep speed is zero, and says if it's already in position */
+bool _BaseServo::_isRedundant(u8 deg, u8 sleep)
+{
+    if (sleep < 1)
+        this->write(deg);
+    return deg == this->read();
 }
 
 
@@ -32,8 +48,9 @@ void _BaseServo::config(u8 pin, u8 min=0, u8 max=180)
 /** delayed write - sleep x milliseconds each deggre movement to reach the deg position */
 void PreciseServo::move(u8 deg, u8 sleep=0)
 {
-    if (local_isRedundant(this->min, this->max, deg, sleep))
-        return this->write(deg); 
+    _adjustDegValues(deg);
+    if (_isRedundant(deg, sleep))
+        return; 
 
     u8 curr = this->read();
 
@@ -88,22 +105,17 @@ void AdvancedServo::_markAsDone(void)
 /** movement core - backbone of the movement validation */
 AdvancedServo* AdvancedServo::move(bool cond, u8 deg, u8 sleep)
 {
+    _adjustDegValues(deg);
+
     // if the user condition isn't true, stop, otherwise, start a new movement
     if (!cond || _isLocked)
         return this;
     else
         _isDone = false;
 
-    // there is no need to continue if the value is already setted, mark as done
-    if (deg == this->read())
-        _markAsDone();
-
     // validade the values and finish the movement if it is ok to do that
-    if (local_isRedundant(this->min, this->max, deg, sleep))
-    {
-        this->write(deg); 
+    if (_isRedundant(deg, sleep))
         _markAsDone();
-    }
 
     // when it is ready to move but hasen't started yet, start the shceduler thing
     if (!_isMoving && !_isDone)

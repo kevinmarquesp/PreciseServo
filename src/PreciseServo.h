@@ -12,7 +12,14 @@ class _BaseServo: public Servo
 {
   public:
     void config(u8 pin, u8 min=0, u8 max=180);
-    u8 min, max; 
+    u8 getMin(void);
+    u8 getMax(void);
+
+  protected:
+    void _adjustDegValues(u8& deg);
+    bool _isRedundant(u8 deg, u8 sleep);
+    u8 _min;
+    u8 _max;
 };
 
 /** delayed servo - class to handle the servo speed with delay() function */
