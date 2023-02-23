@@ -48,14 +48,14 @@ class AdvancedServo: public _BaseServo
     void whenDone(void fn(void));
 
   private:
+    void _update(u8 deg, u8 sleep);
+    void _markAsDone(void);
+
     bool _isLocked;
     bool _isMoving;
     bool _isDone;
     u8   _movementId;
     u64  _scheduler;
-
-    void _update(u8 deg, u8 sleep);
-    void _markAsDone(void);
 };
 
 #endif
