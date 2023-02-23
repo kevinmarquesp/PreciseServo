@@ -180,32 +180,3 @@ void AdvancedServo::unlock(void)
 {
     _isLocked = false;
 }
-
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * ArrayHeler NAMESPACE FUNCTIONS
- */
-
-/** check if an array of servos is all marked as completed */
-bool ArrayHelpers::isAllDone(AdvancedServo* servos, u8 size)
-{
-    for (u8 i = 0; i < size; ++i)
-        if (!servos[i].isDone())
-            return false;
-    return true;
-}
-
-/** check if all servos has the same movement ID */
-bool ArrayHelpers::isAll(AdvancedServo* servos, u8 size, u8 id)
-{
-    for (u8 i = 0; i < size; ++i)
-        if (servos[i].is(id))
-            return false;
-    return true;
-}
-
-/** reset an array of multiple servos to their default values */
-void ArrayHelpers::resetAll(AdvancedServo* servos, u8 size)
-{
-    for (u8 i = 0; i < size; ++i)
-        servos[i].reset();
-}
