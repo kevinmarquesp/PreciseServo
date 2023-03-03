@@ -180,3 +180,9 @@ void AdvancedServo::unlock(void)
 {
     _isLocked = false;
 }
+
+/** toggle the lock state of the servo object */
+void AdvancedServo::toggleLock(void)
+{
+    _isLocked = !_isLocked;
+}

@@ -44,6 +44,7 @@ class AdvancedServo: public _BaseServo
 
     void lock(void);
     void unlock(void);
+    void toggleLock(void);
     void reset(void);
     void whenDone(void fn(void));
 
