@@ -1,26 +1,9 @@
-LIB_NAME ?= PreciseServo
-SRC ?=      src
-DIST ?=     dist
-EXAMPLES ?= examples
+TESTS_FILE          ?= tests/tests.ino
+ARDUINO_BOARD       ?= uno
+ARDUINO_PORT        ?= /dev/ttyUSB0
+AUNITER_BIN         ?= ~/.local/share/AUniter/auniter.sh
+AUNITER_ARDUINO_CLI ?= /bin/arduino-cli
 
-BOARD ?=    arduino:avr:uno
-PORT ?=     /dev/ttyUSB0
-BAUDRATE ?= 9600
-
-TESTS ?=     ./test
-RUN_TESTS ?= ./run-tests.py
-
-monitor:
-	@cu -l ${PORT} -s ${BAUDRATE}
-
-build:
-	@rm -rf ${DIST}
-	@mkdir ${DIST}
-	@cp -r ${SRC} ${DIST}/${LIB_NAME}
-	@cp -r ${EXAMPLES} ${DIST}/${LIB_NAME}/${EXAMPLES}
-	@cd ${DIST}; zip -r ${LIB_NAME}.zip ${LIB_NAME}
-
-tests:
-	@arduino-cli compile -u -b ${BOARD} -p ${PORT} ${TESTS}
-	@clear
-	@PORT=${PORT} BAUDRATE=${BAUDRATE} ${RUN_TESTS}
+test:
+	@echo "==== Testing $(TESTS_FILE)"
+	@AUNITER_ARDUINO_CLI=$(AUNITER_ARDUINO_CLI) $(AUNITER_BIN) --cli test $(ARDUINO_BOARD):$(ARDUINO_PORT) $(TESTS_FILE)
