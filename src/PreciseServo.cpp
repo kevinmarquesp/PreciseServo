@@ -145,6 +145,12 @@ AdvancedServo* AdvancedServo::move(u8 deg, u8 sleep)
     return this->move(_movementId == 0, deg, sleep);
 }
 
+/** getter - return the current position ID */
+u8 AdvancedServo::getId(void)
+{
+    return _movementId;
+}
+
 /** user id validation - check if the current motor is the expected id by the user */
 bool AdvancedServo::is(u8 id)
 {

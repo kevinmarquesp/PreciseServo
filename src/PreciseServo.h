@@ -38,6 +38,7 @@ class AdvancedServo: public _BaseServo
     AdvancedServo* move(bool cond, u8 deg, u8 sleep);
     AdvancedServo* move(u8 deg, u8 sleep);
 
+    u8 getId(void);
     bool is(u8 id);
     bool isDone(void);
     bool isDone(u8 id);
