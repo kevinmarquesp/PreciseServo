@@ -75,3 +75,14 @@ void loop()
         }
 }
 ```
+
+
+## Contribution | Project roadmap
+
+### Things to be done
+
++ [ ] `docs:` add a really short and precise description of the `AdvancedServo` object
++ [ ] `build:` merge this changes to the `main` branch
++ [ ] `build:` publish a new release with that new `AdvancedServo` class
++ [ ] `test:` add a proper unit test module for the `AdvancedServo` object
++ [ ] `docs:` fix README typos
